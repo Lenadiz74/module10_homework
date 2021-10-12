@@ -1,3 +1,10 @@
+/*
+для решения задачи был использован сервер: wss://ws.ifelse.io//
+т.к. сервер: wss://echo.websocket.org/ не работает.
+сервер: wss://ws.ifelse.io// сбрасывает соединение через некоторое время((((
+ */
+
+
 (function renderUI () {
 
     document.querySelector('#root').innerHTML = `    
