@@ -5,7 +5,7 @@
  */
 
 
-(function renderUI () {
+(function renderUI() {
 
     document.querySelector('#root').innerHTML = `    
     
@@ -28,45 +28,46 @@ document.querySelector('.send_button').addEventListener('click', sendMessage);
 document.querySelector('.send_geolocation').addEventListener('click', sendGeolocation);
 
 
-(function websocketStart () {
+(function websocketStart() {
     const wsUri = "wss://ws.ifelse.io//";
     websocket = new WebSocket(wsUri);
-    websocket.onopen = function() {
+    websocket.onopen = function () {
         console.log('CONNECTED');
     };
-    websocket.onclose = function(evt) {
-        console.log("DISCONNECTED"+evt);
+    websocket.onclose = function (evt) {
+        console.log("DISCONNECTED" + evt);
     };
-    websocket.onmessage = function(evt) {
+    websocket.onmessage = function (evt) {
 
-        if (!evt.data.includes('object')&&!evt.data.includes('Request served by c')) {
+        if (!evt.data.includes('object') && !evt.data.includes('Request served by c')) {
             document.querySelector('.message_field').appendChild(constructMessage(evt.data, 'server'));
             smoothScrollToMessage();
         }
     };
-    websocket.onerror = function(evt) {
+    websocket.onerror = function (evt) {
         console.log(`error ${evt.data}`);
     };
 })();
 
 
-function constructMessage(message,sender,geo) {
+function constructMessage(message, sender, geo) {
     const div = document.createElement('div');
     const p = document.createElement('p');
+    p.classList.add('text');
     p.innerText = message;
     if (sender === 'user') {
         div.classList.add('outgoing_message');
-        p.className = 'message_text_out text';
+        p.classList.add('message_text_out');
 
-    }else if (sender === 'server'){
+    } else if (sender === 'server') {
         div.classList.add('incoming_message');
-        p.className = 'message_text_in text';
+        p.classList.add('message_text_in');
 
-    }else if (sender === 'geo'){
+    } else if (sender === 'geo') {
         const a = document.createElement('a');
         a.href = `https://www.openstreetmap.org/#map=18/${geo.latitude}/${geo.longitude}`;
         a.target = 'blank';
-        a.className = 'message_text_out text';
+        a.classList.add('message_text_out','text');
         div.classList.add('outgoing_message');
         a.textContent = 'Ссылка на карту.';
         div.appendChild(a);
@@ -76,15 +77,15 @@ function constructMessage(message,sender,geo) {
     return div;
 }
 
-function sendMessage () {
+function sendMessage() {
     const input = document.querySelector('.input_message_field')
     const messageText = input.value;
     if (!!messageText) {
-        rootEl.appendChild(constructMessage(messageText,'user'));
+        rootEl.appendChild(constructMessage(messageText, 'user'));
         websocket.send(messageText);
         input.value = '';
         smoothScrollToMessage();
-    }else {
+    } else {
         input.setAttribute('placeholder', 'Введите сообщение!');
     }
 }
@@ -100,7 +101,7 @@ function sendGeolocation() {
     }
 }
 
-function smoothScrollToMessage () {
+function smoothScrollToMessage() {
     const messagesArray = document.querySelectorAll('.text');
-    messagesArray[messagesArray.length - 1].scrollIntoView({ behavior: 'smooth', block: 'end'});
+    messagesArray[messagesArray.length - 1].scrollIntoView({behavior: 'smooth', block: 'end'});
 }
